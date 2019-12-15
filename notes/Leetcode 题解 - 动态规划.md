@@ -38,7 +38,7 @@
     * [1. 删除两个字符串的字符使它们相等](#1-删除两个字符串的字符使它们相等)
     * [2. 编辑距离](#2-编辑距离)
     * [3. 复制粘贴字符](#3-复制粘贴字符)
-<!-- GFM-TOC -->
+      <!-- GFM-TOC -->
 
 
 
@@ -714,11 +714,11 @@ public int knapsack(int W, int N, int[] weights, int[] values) {
 
 0-1 背包问题无法使用贪心算法来求解，也就是说不能按照先添加性价比最高的物品来达到最优，这是因为这种方式可能造成背包空间的浪费，从而无法达到最优。考虑下面的物品和一个容量为 5 的背包，如果先添加物品 0 再添加物品 1，那么只能存放的价值为 16，浪费了大小为 2 的空间。最优的方式是存放物品 1 和物品 2，价值为 22.
 
-| id | w | v | v/w |
-| --- | --- | --- | --- |
-| 0 | 1 | 6 | 6 |
-| 1 | 2 | 10 | 5 |
-| 2 | 3 | 12 | 4 |
+| id   | w    | v    | v/w  |
+| ---- | ---- | ---- | ---- |
+| 0    | 1    | 6    | 6    |
+| 1    | 2    | 10   | 5    |
+| 2    | 3    | 12   | 4    |
 
 **变种**  
 
@@ -1215,7 +1215,7 @@ public int minDistance(String word1, String word2) {
 
 72\. Edit Distance (Hard)
 
-[Leetcode](https://leetcode.com/problems/edit-distance/description/) / [力扣](https://leetcode-cn.com/problems/edit-distance/description/)
+[Leetcode](https://leetcode.com/problems/edit-distance/description/) / [官方解题](https://leetcode-cn.com/problems/number-of-ways-to-stay-in-the-same-place-after-some-steps/solution/ting-zai-yuan-di-de-fang-an-shu-by-leetcode/)
 
 ```html
 Example 1:
@@ -1240,30 +1240,46 @@ exection -> execution (insert 'u')
 
 题目描述：修改一个字符串成为另一个字符串，使得修改次数最少。一次修改操作包括：插入一个字符、删除一个字符、替换一个字符。
 
-```java
-public int minDistance(String word1, String word2) {
-    if (word1 == null || word2 == null) {
+```javascript
+/**
+ * @param {string} word1
+ * @param {string} word2
+ * @return {number}
+ */
+var minDistance = function (word1, word2) {
+    if (word1 == undefined || word2 == undefined || word2 == word1) {
         return 0;
     }
-    int m = word1.length(), n = word2.length();
-    int[][] dp = new int[m + 1][n + 1];
-    for (int i = 1; i <= m; i++) {
+    let len1 = word1.length;
+    let len2 = word2.length;
+    //dp[i][j] means the shortest edit distance front i and j words in word1 and word2
+    let dp = new Array(len1 + 1);
+    for (let i = 0; i < dp.length; i++) {
+        dp[i] = new Array(len2 + 1);
+    }
+    //deal with special situation
+    if (len1 == 0 || len2 == 0)
+        return len1 + len2;
+    //initial edge value
+    for (let i = 0; i <= len1; i++) {
         dp[i][0] = i;
     }
-    for (int i = 1; i <= n; i++) {
-        dp[0][i] = i;
+    for (let j = 0; j <= len2; j++) {
+        dp[0][j] = j;
     }
-    for (int i = 1; i <= m; i++) {
-        for (int j = 1; j <= n; j++) {
-            if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
-                dp[i][j] = dp[i - 1][j - 1];
+    //dynamic programming
+    for (let i = 1; i <= len1; i++) {
+        for (let j = 1; j <= len2; j++) {
+            //here is very easy to make mistake!
+            if (word1[i - 1] == word2[j - 1]) {
+                dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1] - 1);
             } else {
-                dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i][j - 1], dp[i - 1][j])) + 1;
+                dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
             }
         }
     }
-    return dp[m][n];
-}
+    return dp[len1][len2];
+};
 ```
 
 ## 3. 复制粘贴字符
